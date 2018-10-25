@@ -1,6 +1,7 @@
 import os
 import csv
 import numpy as np
+import pandas as pd
 
 from tqdm import tqdm
 
@@ -49,3 +50,21 @@ def rocstories(data_dir, n_train=1497, n_valid=374):
     trY = np.asarray(trY, dtype=np.int32)
     vaY = np.asarray(vaY, dtype=np.int32)
     return (trX1, trX2, trX3, trY), (vaX1, vaX2, vaX3, vaY), (teX1, teX2, teX3)
+
+
+def imdb(data_dir, n_train=None, n_valid=None):
+    df_trn = pd.read_csv(os.path.join(data_dir, 'train.csv'), header=None)
+    df_val = pd.read_csv(os.path.join(data_dir, 'test.csv'), header=None)
+
+    if n_train is not None:
+        df_trn = df_trn[:n_train]
+    if n_valid is not None:
+        df_val = df_val[:n_valid]
+
+    trX = [x for x in df_trn[1].values]
+    trY = [y for y in df_trn[0].values]
+
+    vaX = [x for x in df_val[1].values]
+    vaY = [y for y in df_val[0].values]
+
+    return (trX, trY), (vaX, vaY), []
